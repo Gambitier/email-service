@@ -8,18 +8,29 @@ exports.sendEmail = ({ config = {}, body = {} }) => {
 	const schema = Joi.object().keys({
 		templateName: Joi.string().required(),
 		templateOptions: Joi.object().required(),
+		attachments: Joi.array(),
 		emailOptions: Joi.object().required(),
 		language: Joi.string(),
 	});
 
 	const result = schema.validate(body);
+
 	if (result.error) {
 		console.log(String(result.error) || result.error.message);
 		return;
 	}
-	const { emailOptions, templateName, templateOptions, language } = body;
+
+	const { emailOptions, templateName, templateOptions, attachments, language } =
+		body;
+
 	service
-		.sendTemplatedEmail(emailOptions, templateName, templateOptions, language)
+		.sendTemplatedEmail(
+			emailOptions,
+			templateName,
+			templateOptions,
+			attachments,
+			language
+		)
 		.then((response) => console.log('success response:' + response))
 		.catch((err) => console.log('error ', err));
 };
@@ -40,6 +51,16 @@ if (require.main === module) {
 			live_chat_url: 'gambitier.github.io',
 			help_url: 'gambitier.github.io',
 		},
+		attachments: [
+			{
+				filename: 'Attachement_README.md',
+				path: 'README.md',
+			},
+			{
+				filename: 'Attachement-2_README.md',
+				path: 'README.md',
+			},
+		],
 		emailOptions: {
 			to: [
 				'Akash <akash@yopmail.com>',

@@ -67,12 +67,13 @@ module.exports = (env) => {
 		mailOptions,
 		template,
 		templateOptions,
+		attachments,
 		lang
 	) => {
 		return service
 			.processTemplate(template, templateOptions, lang)
 			.then((opts) => {
-				const options = Object.assign({}, mailOptions, opts);
+				const options = Object.assign({}, mailOptions, opts, { attachments });
 				return service.sendMail(options);
 			});
 	};
